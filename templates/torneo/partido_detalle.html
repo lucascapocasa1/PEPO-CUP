@@ -1,0 +1,117 @@
+{% extends 'torneo/base.html' %}
+
+{% block title %}{{ partido.local.display }} vs {{ partido.visitante.display }} — PEPO CUP{% endblock %}
+
+{% block content %}
+  <div class="tarjeta encabezado-partido">
+    <div class="eq">
+      <a href="{{ partido.local.get_absolute_url }}">{{ partido.local.display }}</a>
+    </div>
+    {% if partido.jugado %}
+      <div class="marcador">{{ partido.goles_local }} - {{ partido.goles_visitante }}</div>
+    {% else %}
+      <div class="marcador">vs</div>
+    {% endif %}
+    <div class="eq">
+      <a href="{{ partido.visitante.get_absolute_url }}">{{ partido.visitante.display }}</a>
+    </div>
+    <div class="meta">
+      {{ partido.get_fase_display }} · {{ partido.ronda }}
+      {% if partido.fecha %} · {{ partido.fecha|date:"d/m/Y H:i" }}{% endif %}
+      {% if partido.penales_local is not None and partido.penales_visitante is not None %}
+        <br>({{ partido.penales_local }} - {{ partido.penales_visitante }} penales)
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <section>
+      <h2>Goles</h2>
+      <div class="tarjeta">
+        <ul class="eventos">
+          {% for e in goles %}
+            <li>
+              <span class="icono">⚽</span>
+              <span>{{ e.jugador.nombre }}</span>
+              <span class="enlace-suave">{{ e.jugador.participante.display }}</span>
+              {% if e.minuto %}<span class="min">{{ e.minuto }}'</span>{% endif %}
+            </li>
+          {% empty %}
+            <li class="vacio">Sin goles cargados.</li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <h2>Asistencias</h2>
+      <div class="tarjeta">
+        <ul class="eventos">
+          {% for e in asistencias %}
+            <li>
+              <span class="icono">🅰️</span>
+              <span>{{ e.jugador.nombre }}</span>
+              <span class="enlace-suave">{{ e.jugador.participante.display }}</span>
+              {% if e.minuto %}<span class="min">{{ e.minuto }}'</span>{% endif %}
+            </li>
+          {% empty %}
+            <li class="vacio">Sin asistencias cargadas.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>Figura del partido</h2>
+      <div class="tarjeta">
+        {% if partido.figura %}
+          <div class="figura">
+            {% if partido.figura.carta_url %}
+              <img src="{{ partido.figura.carta_url }}" alt="{{ partido.figura.nombre }}">
+            {% endif %}
+            <div>
+              <div class="etiqueta">Figura</div>
+              <div style="font-weight:600">{{ partido.figura.nombre }}</div>
+              <div class="enlace-suave">{{ partido.figura.participante.display }}</div>
+            </div>
+          </div>
+        {% else %}
+          <div class="vacio">Sin figura cargada.</div>
+        {% endif %}
+      </div>
+
+      <h2>Alineaciones titulares</h2>
+      <div class="tarjeta">
+        <div class="encabezado-eq">
+          <strong>{{ partido.local.display }}</strong> <span class="formacion">({{ partido.local.formacion }})</span>
+        </div>
+        <ul class="cartas">
+          {% for j in local_titulares %}
+            <li>
+              {% if j.carta_url %}
+                <img src="{{ j.carta_url }}" alt="{{ j.nombre }}" loading="lazy">
+              {% else %}
+                <div class="carta-vacia">{{ j.rating }}<br>{{ j.posicion }}</div>
+              {% endif %}
+              <div class="carta-nombre">{{ j.nombre }}</div>
+            </li>
+          {% endfor %}
+        </ul>
+
+        <div class="encabezado-eq" style="margin-top:18px">
+          <strong>{{ partido.visitante.display }}</strong> <span class="formacion">({{ partido.visitante.formacion }})</span>
+        </div>
+        <ul class="cartas">
+          {% for j in visitante_titulares %}
+            <li>
+              {% if j.carta_url %}
+                <img src="{{ j.carta_url }}" alt="{{ j.nombre }}" loading="lazy">
+              {% else %}
+                <div class="carta-vacia">{{ j.rating }}<br>{{ j.posicion }}</div>
+              {% endif %}
+              <div class="carta-nombre">{{ j.nombre }}</div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </section>
+  </div>
+{% endblock %}

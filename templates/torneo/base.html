@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}PEPO CUP{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="contenedor barra">
+      <a href="{% url 'home' %}" class="logo">PEPO <span>CUP</span></a>
+      <nav class="nav">
+        {% if torneo %}
+          <a href="{% url 'home' %}">Inicio</a>
+          <a href="{% url 'participantes' torneo.slug %}">Participantes</a>
+          <a href="{% url 'partidos' torneo.slug %}">Partidos</a>
+          <a href="{% url 'goleadores' torneo.slug %}">Goleadores</a>
+        {% else %}
+          <a href="{% url 'home' %}">Inicio</a>
+          <a href="{% url 'torneo_lista' %}">Torneos</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  {% if torneo %}
+    <div class="contenedor barra-torneo">
+      <span class="nombre-torneo">{{ torneo.nombre }}</span>
+      <span class="estado estado-{{ torneo.estado }}">{{ torneo.get_estado_display }}</span>
+      {% if campeon %}
+        <span class="campeon">🏆 Campeón: {{ campeon.display }}</span>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <main class="contenedor">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="contenedor">
+      <span>PEPO CUP — torneo entre amigos</span>
+      <span>
+        {% if user.is_authenticated %}
+          <a href="{% url 'cargar' %}">Cargar resultado</a> ·
+          <a href="{% url 'admin:index' %}">Admin</a> ·
+          <form method="post" action="{% url 'logout' %}" class="form-salir">
+            {% csrf_token %}
+            <button type="submit">Salir</button>
+          </form>
+        {% else %}
+          <a href="{% url 'login' %}">Organizador</a>
+        {% endif %}
+      </span>
+    </div>
+  </footer>
+</body>
+</html>

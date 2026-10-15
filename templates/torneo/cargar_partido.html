@@ -1,0 +1,78 @@
+{% extends 'torneo/base.html' %}
+
+{% block title %}Cargar {{ partido.local.display }} vs {{ partido.visitante.display }}{% endblock %}
+
+{% block content %}
+  <h1>Cargar resultado</h1>
+
+  <form method="post" class="form-carga">
+    {% csrf_token %}
+
+    <div class="tarjeta">
+      <div class="campo-marcador">
+        <span class="eq local">{{ partido.local.display }}</span>
+        <span></span>
+        <span class="eq visitante">{{ partido.visitante.display }}</span>
+        {{ resultado_form.goles_local }}
+        <span class="guion">-</span>
+        {{ resultado_form.goles_visitante }}
+      </div>
+
+      <label class="campo-jugado">
+        {{ resultado_form.jugado }} {{ resultado_form.jugado.label }}
+      </label>
+
+      {% if partido.fase == 'playoff' %}
+        <p class="vacio" style="margin-bottom:4px">¿Se definió por penales?</p>
+        <div style="display:flex;gap:10px;align-items:center">
+          {{ resultado_form.penales_local }}
+          <span class="guion">-</span>
+          {{ resultado_form.penales_visitante }}
+        </div>
+      {% endif %}
+    </div>
+
+    <h2>Goles y asistencias</h2>
+    <div class="tarjeta">
+      <div class="eventos-form">
+        {{ formset.management_form }}
+        {% for f in formset %}
+          <div>
+            {{ f.id }}
+            {{ f.jugador }}
+            {{ f.tipo }}
+            {{ f.minuto }}
+            {% if f.errors %}
+              <ul class="mensajes">
+                {% for errores in f.errors.values %}
+                  <li class="error">{{ errores.0 }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+      {% if formset.non_form_errors %}
+        <ul class="mensajes">
+          {% for e in formset.non_form_errors %}<li class="error">{{ e }}</li>{% endfor %}
+        </ul>
+      {% endif %}
+      <p class="vacio" style="margin-bottom:0">Tipos: Gol, Autogol o Asistencia. Dejá en blanco lo que no aplique.</p>
+    </div>
+
+    <h2>Figura del partido</h2>
+    <div class="tarjeta">
+      <select name="figura">
+        <option value="">— Sin figura —</option>
+        {% for j in figuras_posibles %}
+          <option value="{{ j.pk }}" {% if partido.figura_id == j.pk %}selected{% endif %}>
+            {{ j.nombre }} ({{ j.participante.display }})
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <button type="submit" class="btn">Guardar resultado</button>
+    <a href="{% url 'cargar' %}" class="btn btn-secundario">Cancelar</a>
+  </form>
+{% endblock %}

@@ -1,0 +1,12 @@
+# Alineación de Lucas — vista de la imagen de FUTBIN (4-2-3-1)
+Joan Garcia|POR|86|joangarcia.png
+Xavi Espart|DEF|85|espart.png
+Richards|DEF|85|richards.png
+Alvaro Carreras|DEF|81|carreras.png
+Bacha|DEF|86|bacha.png
+Karchaoui|MED|87|karchaoui.png
+Geyoro|MED|84|geyoro.png
+Olise|MED|90|olise.png
+Bruno Fernandes|MED|89|brunof.png
+Cherki|MED|86|cherki.png
+Chawinga|DEL|87|chawinga.png

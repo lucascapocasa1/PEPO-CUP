@@ -1,0 +1,19 @@
+# Alineación de ejemplo — copialo y llenalo con tu equipo.
+# Formato: Nombre|Posición|Rating|archivo_de_carta
+# Posiciones: POR, DEF, MED, DEL (también acepta las del juego: GK, CB, LB, RB, CDM, CM, CAM, ST, LW, RW)
+# El archivo de carta es el nombre del archivo que va en static/cartas/ (se puede dejar vacío)
+
+Joan Garcia|POR|86|joangarcia.png
+Xavi Espart|DEF|85|espart.png
+Richards|DEF|85|richards.png
+Alvaro Carreras|DEF|81|carreras.png
+Bacha|DEF|86|bacha.png
+Karchaoui|MED|87|karchaoui.png
+Geyoro|MED|84|geyoro.png
+Olise|MED|90|olise.png
+Bruno Fernandes|MED|89|brunof.png
+Cherki|MED|86|cherki.png
+Chawinga|DEL|87|chawinga.png
+
+# Suplentes (después de esta línea)
+# Suplente Uno|MED|83|suplente1.png

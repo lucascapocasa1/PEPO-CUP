@@ -1,0 +1,95 @@
+{% extends 'torneo/base.html' %}
+
+{% block title %}{{ p.display }} — {{ torneo.nombre }}{% endblock %}
+
+{% block content %}
+  <h1>{{ p.display }}</h1>
+  {% if p.club %}<p class="vacio" style="margin-top:-8px">{{ p.club }} · Formación {{ p.formacion }}</p>{% endif %}
+
+  <h2>Stats del torneo</h2>
+  <div class="stats">
+    <div class="stat"><div class="valor">{{ stats.pts }}</div><div class="etiqueta">Puntos</div></div>
+    <div class="stat"><div class="valor">{{ stats.pj }}</div><div class="etiqueta">PJ</div></div>
+    <div class="stat"><div class="valor">{{ stats.g }}</div><div class="etiqueta">G</div></div>
+    <div class="stat"><div class="valor">{{ stats.e }}</div><div class="etiqueta">E</div></div>
+    <div class="stat"><div class="valor">{{ stats.p }}</div><div class="etiqueta">P</div></div>
+    <div class="stat"><div class="valor">{{ stats.dg }}</div><div class="etiqueta">Dif. gol</div></div>
+    <div class="stat"><div class="valor">{{ stats.goles }}</div><div class="etiqueta">Goles</div></div>
+    <div class="stat"><div class="valor">{{ stats.asistencias }}</div><div class="etiqueta">Asist.</div></div>
+    <div class="stat"><div class="valor">{{ stats.figuras }}</div><div class="etiqueta">Figuras</div></div>
+  </div>
+
+  <h2>Alineación — {{ p.formacion }}</h2>
+  <div class="tarjeta">
+    {% if titulares %}
+      <ul class="cartas">
+        {% for j in titulares %}
+          <li>
+            {% if j.carta_url %}
+              <img src="{{ j.carta_url }}" alt="{{ j.nombre }}" loading="lazy">
+            {% else %}
+              <div class="carta-vacia">{{ j.rating }} {{ j.posicion }}</div>
+            {% endif %}
+            <div class="carta-nombre">{{ j.nombre }}</div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="vacio">Todavía no cargó su alineación.</div>
+    {% endif %}
+
+    {% if suplentes %}
+      <h2>Suplentes</h2>
+      <ul class="cartas">
+        {% for j in suplentes %}
+          <li>
+            {% if j.carta_url %}
+              <img src="{{ j.carta_url }}" alt="{{ j.nombre }}" loading="lazy">
+            {% else %}
+              <div class="carta-vacia">{{ j.rating }} {{ j.posicion }}</div>
+            {% endif %}
+            <div class="carta-nombre">{{ j.nombre }}</div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+
+  <div class="grid-2">
+    <section>
+      <h2>Próximos partidos</h2>
+      <div class="tarjeta">
+        {% for partido in proximos %}
+          <a class="fila-partido" href="{% url 'partido_detalle' partido.pk %}">
+            {% if partido.fecha %}<span class="fecha">{{ partido.fecha|date:"d/m" }}</span>{% endif %}
+            <span class="equipo local">
+              {% if partido.local == p %}{{ partido.visitante.display }}{% else %}{{ partido.local.display }}{% endif %}
+            </span>
+            <span class="marcador pendiente">{{ partido.marcador }}</span>
+            <span class="equipo enlace-suave">
+              {% if partido.local == p %}Casa{% else %}Fuera{% endif %}
+            </span>
+          </a>
+        {% empty %}
+          <div class="vacio">Sin partidos pendientes.</div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section>
+      <h2>Resultados</h2>
+      <div class="tarjeta">
+        {% for partido in resultados %}
+          <a class="fila-partido" href="{% url 'partido_detalle' partido.pk %}">
+            {% if partido.fecha %}<span class="fecha">{{ partido.fecha|date:"d/m" }}</span>{% endif %}
+            <span class="equipo local">{{ partido.local.display }}</span>
+            <span class="marcador">{{ partido.goles_local }} - {{ partido.goles_visitante }}</span>
+            <span class="equipo">{{ partido.visitante.display }}</span>
+          </a>
+        {% empty %}
+          <div class="vacio">Todavía no jugó.</div>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+{% endblock %}

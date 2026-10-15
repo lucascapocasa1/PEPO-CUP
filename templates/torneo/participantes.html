@@ -1,0 +1,20 @@
+{% extends 'torneo/base.html' %}
+
+{% block title %}Participantes — {{ torneo.nombre }}{% endblock %}
+
+{% block content %}
+  <h1>Participantes</h1>
+  <ul class="grilla-participantes">
+    {% for p in participantes %}
+      <li>
+        <a href="{{ p.get_absolute_url }}">
+          <div class="avatar">{% cycle '⚽' '🎮' '🏆' '🔥' '⭐' '🎲' '🎯' '🥇' '🛡️' '⚡' forloop.counter0 %}</div>
+          <div class="nombre">{{ p.display }}</div>
+          {% if p.club %}<div class="club">{{ p.club }}</div>{% endif %}
+        </a>
+      </li>
+    {% empty %}
+      <li class="vacio">Sin participantes cargados.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

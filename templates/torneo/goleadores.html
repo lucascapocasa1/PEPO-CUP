@@ -1,0 +1,35 @@
+{% extends 'torneo/base.html' %}
+
+{% block title %}Goleadores — {{ torneo.nombre }}{% endblock %}
+
+{% block content %}
+  <h1>Goleadores</h1>
+  <div class="tarjeta">
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th class="num">#</th>
+          <th>Jugador</th>
+          <th>Equipo</th>
+          <th class="num">Goles</th>
+          <th class="num">Asist.</th>
+          <th class="num">Figuras</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for g in goleadores %}
+          <tr>
+            <td class="pos">{{ forloop.counter }}</td>
+            <td>{{ g.jugador.nombre }}</td>
+            <td><a class="enlace-suave" href="{{ g.jugador.participante.get_absolute_url }}">{{ g.jugador.participante.display }}</a></td>
+            <td class="num">{{ g.goles }}</td>
+            <td class="num">{{ g.asistencias }}</td>
+            <td class="num">{{ g.figuras }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6" class="vacio">Sin goles cargados todavía.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

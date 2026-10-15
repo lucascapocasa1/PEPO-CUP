@@ -1,0 +1,27 @@
+{% extends 'torneo/base.html' %}
+
+{% block title %}Partidos — {{ torneo.nombre }}{% endblock %}
+
+{% block content %}
+  <h1>Partidos</h1>
+
+  {% for nombre_fecha, lista in fechas.items %}
+    <h2>{{ nombre_fecha }}</h2>
+    <div class="tarjeta">
+      {% for p in lista %}
+        <a class="fila-partido" href="{% url 'partido_detalle' p.pk %}">
+          {% if p.fecha %}<span class="fecha">{{ p.fecha|date:"d/m H:i" }}</span>{% endif %}
+          <span class="equipo local">{{ p.local.display }}</span>
+          {% if p.jugado %}
+            <span class="marcador">{{ p.goles_local }} - {{ p.goles_visitante }}</span>
+          {% else %}
+            <span class="marcador pendiente">vs</span>
+          {% endif %}
+          <span class="equipo">{{ p.visitante.display }}</span>
+        </a>
+      {% endfor %}
+    </div>
+  {% empty %}
+    <div class="tarjeta"><div class="vacio">Todavía no hay fixture cargado.</div></div>
+  {% endfor %}
+{% endblock %}

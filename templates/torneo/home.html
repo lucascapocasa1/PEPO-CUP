@@ -1,0 +1,108 @@
+{% extends 'torneo/base.html' %}
+
+{% block title %}{{ torneo.nombre }} — PEPO CUP{% endblock %}
+
+{% block content %}
+  <h1>Tabla de posiciones</h1>
+  <div class="tarjeta">
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th class="num">#</th>
+          <th>Jugador</th>
+          <th class="num">PJ</th>
+          <th class="num">G</th>
+          <th class="num">E</th>
+          <th class="num">P</th>
+          <th class="num">GF</th>
+          <th class="num">GC</th>
+          <th class="num">DG</th>
+          <th class="pts">PTS</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for fila in tabla %}
+          <tr class="{% if torneo.estado != 'finalizado' and forloop.counter <= 4 %}pos-playoff{% endif %}">
+            <td class="pos">{{ forloop.counter }}</td>
+            <td><a href="{% url 'participante_detalle' torneo.slug fila.participante.pk %}">{{ fila.participante.display }}</a></td>
+            <td class="num">{{ fila.pj }}</td>
+            <td class="num">{{ fila.g }}</td>
+            <td class="num">{{ fila.e }}</td>
+            <td class="num">{{ fila.p }}</td>
+            <td class="num">{{ fila.gf }}</td>
+            <td class="num">{{ fila.gc }}</td>
+            <td class="num">{{ fila.dg }}</td>
+            <td class="pts">{{ fila.pts }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="10" class="vacio">Todavía no hay partidos jugados.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid-2">
+    <section>
+      <h2>Últimos resultados</h2>
+      <div class="tarjeta">
+        {% for p in ultimos_resultados %}
+          <a class="fila-partido" href="{% url 'partido_detalle' p.pk %}">
+            {% if p.fecha %}<span class="fecha">{{ p.fecha|date:"d/m" }}</span>{% endif %}
+            <span class="equipo local">{{ p.local.display }}</span>
+            <span class="marcador">{{ p.goles_local }} - {{ p.goles_visitante }}</span>
+            <span class="equipo">{{ p.visitante.display }}</span>
+          </a>
+        {% empty %}
+          <div class="vacio">Sin resultados todavía.</div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section>
+      <h2>Próximos partidos</h2>
+      <div class="tarjeta">
+        {% for p in proximos_partidos %}
+          <a class="fila-partido" href="{% url 'partido_detalle' p.pk %}">
+            {% if p.fecha %}<span class="fecha">{{ p.fecha|date:"d/m H:i" }}</span>{% endif %}
+            <span class="equipo local">{{ p.local.display }}</span>
+            <span class="marcador pendiente">{{ p.marcador }}</span>
+            <span class="equipo">{{ p.visitante.display }}</span>
+          </a>
+        {% empty %}
+          <div class="vacio">No hay partidos pendientes. ¡Fin del torneo!</div>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+
+  <h2>Goleadores</h2>
+  <div class="tarjeta">
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>Jugador</th>
+          <th>Equipo</th>
+          <th class="num">Goles</th>
+          <th class="num">Asist.</th>
+          <th class="num">Figuras</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for g in goleadores %}
+          <tr>
+            <td>{{ g.jugador.nombre }}</td>
+            <td class="enlace-suave">{{ g.jugador.participante.display }}</td>
+            <td class="num">{{ g.goles }}</td>
+            <td class="num">{{ g.asistencias }}</td>
+            <td class="num">{{ g.figuras }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="5" class="vacio">Sin goles cargados todavía.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% if goleadores %}
+      <a href="{% url 'goleadores' torneo.slug %}" class="enlace-suave">Ver todos →</a>
+    {% endif %}
+  </div>
+{% endblock %}

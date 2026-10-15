@@ -1,0 +1,47 @@
+{% extends 'torneo/base.html' %}
+
+{% block title %}Cargar resultado — PEPO CUP{% endblock %}
+
+{% block content %}
+  <h1>Cargar resultado</h1>
+
+  {% if messages %}
+    <ul class="mensajes">
+      {% for message in messages %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if not torneo %}
+    <div class="tarjeta"><div class="vacio">No hay torneos cargados.</div></div>
+  {% else %}
+    <h2>Pendientes</h2>
+    <div class="tarjeta">
+      {% for p in pendientes %}
+        <a class="fila-partido" href="{% url 'cargar_partido' p.pk %}">
+          <span class="fecha">{{ p.ronda }}</span>
+          <span class="equipo local">{{ p.local.display }}</span>
+          <span class="marcador pendiente">vs</span>
+          <span class="equipo">{{ p.visitante.display }}</span>
+        </a>
+      {% empty %}
+        <div class="vacio">No hay partidos pendientes. 🎉</div>
+      {% endfor %}
+    </div>
+
+    <h2>Ya cargados</h2>
+    <div class="tarjeta">
+      {% for p in jugados %}
+        <a class="fila-partido" href="{% url 'cargar_partido' p.pk %}">
+          <span class="fecha">{{ p.ronda }}</span>
+          <span class="equipo local">{{ p.local.display }}</span>
+          <span class="marcador">{{ p.goles_local }} - {{ p.goles_visitante }}</span>
+          <span class="equipo">{{ p.visitante.display }}</span>
+        </a>
+      {% empty %}
+        <div class="vacio">Todavía no cargaste ningún resultado.</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}
