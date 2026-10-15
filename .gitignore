@@ -16,3 +16,8 @@ staticfiles/
 # Sistema
 .DS_Store
 Thumbs.db
+
+# Entorno del agente de codificaci?n
+.agents/
+.opencode/
+skills-lock.json
